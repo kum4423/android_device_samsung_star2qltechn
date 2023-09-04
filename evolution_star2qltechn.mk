@@ -49,12 +49,12 @@ PRODUCT_GMS_CLIENTID_BASE := android-samsung
 # ArrowOS Properties
 DEVICE_MAINTAINER := Kum4423
 
-BUILD_FINGERPRINT := "samsung/star2qltechn/star2qltechn:10/QP1A.190711.020/G965FXXUHFVK1:user/release-keys"
+BUILD_FINGERPRINT := "samsung/star2qltechn/star2qltechn:10/QP1A.190711.020/SC03KOMU1CUF3:user/release-keys"
 
 PRODUCT_BUILD_PROP_OVERRIDES += \
     PRODUCT_NAME=star2qltechn \
-    PRIVATE_BUILD_DESC="star2qltechn-user 10 QP1A.190711.020 G965FXXUHFVK1 release-keys"
+    PRIVATE_BUILD_DESC="star2qltechn-user 10 QP1A.190711.020 SC03KOMU1CUF3 release-keys"
 
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.build.PDA=G965FXXUHFVK1 \
-    ro.build.fingerprint=samsung/star2qltechn/star2qltechn:10/QP1A.190711.020/G965FXXUHFVK1:user/release-keys
+    ro.build.PDA=SC03KOMU1CUF3 \
+    ro.build.fingerprint=samsung/star2qltechn/star2qltechn:10/QP1A.190711.020/SC03KOMU1CUF3:user/release-keys
