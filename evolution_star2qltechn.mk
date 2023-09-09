@@ -21,7 +21,7 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/non_ab_device.mk)
 # Product API level
 $(call inherit-product, $(SRC_TARGET_DIR)/product/product_launched_with_o.mk)
 
-# Inherit from star2lte device
+# Inherit from star2qltechn device
 $(call inherit-product, device/samsung/star2qltechn/device.mk)
 
 # Boot Animation
