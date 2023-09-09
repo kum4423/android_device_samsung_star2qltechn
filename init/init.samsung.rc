@@ -1,0 +1,188 @@
+on init
+    # Disable vendor overlay
+    mount none /vendor/lost+found /vendor/overlay bind
+
+    # Set SunlightEnhancement sysnode owner
+    chown system system /sys/class/mdnie/mdnie/lux
+
+    # Brightness Permission
+    chown system system /sys/class/backlight/panel0-backlight/brightness
+    chown system system /sys/class/backlight/panel0-backlight/max_brightness
+    chmod 0660 /sys/class/backlight/panel0-backlight/brightness
+    chmod 0660 /sys/class/backlight/panel0-backlight/max_brightness
+
+    # Flashlight
+    chown system system /sys/class/camera/flash/rear_flash
+
+    # Vibrator
+    chown system system /sys/class/timed_output/vibrator/enable
+    chown system system /sys/class/timed_output/vibrator/intensity
+    chown system system /sys/class/timed_output/vibrator/force_touch_intensity
+    write /sys/class/timed_output/vibrator/force_touch_intensity 10000
+    
+    # GPU
+    chown radio system /sys/kernel/gpu/gpu_max_clock
+    chown radio system /sys/kernel/gpu/gpu_min_clock
+    chmod 0666 /sys/kernel/gpu/gpu_max_clock
+    chmod 0666 /sys/kernel/gpu/gpu_min_clock
+
+on boot
+    # ZRAM setup
+    write /sys/block/zram0/comp_algorithm lz4
+    write /proc/sys/vm/page-cluster 0
+
+on fs
+    swapon_all /system/etc/fstab.zram
+
+# Charger
+service charger /system/bin/charger
+    class sec-charger
+    user root
+    group system radio input
+    capabilities SYS_BOOT
+    critical
+
+on post-fs-data
+
+# Logcat Services
+service boot_log /system/bin/logcat -b all -D -f /cache/boot_log_full.txt
+    class main
+    user root
+    group root system
+    disabled
+    oneshot
+
+service boot_log_crash /system/bin/logcat -b crash -D -f /cache/boot_log_crash.txt
+    class main
+    user root
+    group root system
+    disabled
+    oneshot
+
+service boot_log_kernel /system/bin/logcat -b kernel -D -f /cache/boot_log_kernel.txt
+    class main
+    user root
+    group root system
+    disabled
+    oneshot
+
+on post-fs-data
+# Clear existing log and start the service
+    rm /cache/boot_log_full.txt
+    rm /cache/boot_log_crash.txt
+    rm /cache/boot_log_kernel.txt
+    start boot_log
+    start boot_log_crash
+    start boot_log_kernel
+
+on property:sys.boot_completed=1
+# Stop the logger service
+    stop boot_log
+    stop boot_log_crash
+    stop boot_log_kernel
+
+# SVC LED
+    chown system system /sys/class/sec/led/led_r
+    chown system system /sys/class/sec/led/led_g
+    chown system system /sys/class/sec/led/led_b
+
+    chown system system /sys/class/leds/led_r/brightness
+    chown system system /sys/class/leds/led_g/brightness
+    chown system system /sys/class/leds/led_b/brightness
+    chown system system /sys/class/leds/led_r/delay_on
+    chown system system /sys/class/leds/led_g/delay_on
+    chown system system /sys/class/leds/led_b/delay_on
+    chown system system /sys/class/leds/led_r/delay_off
+    chown system system /sys/class/leds/led_g/delay_off
+    chown system system /sys/class/leds/led_b/delay_off
+    chown system system /sys/class/leds/led_r/blink
+    chown system system /sys/class/leds/led_g/blink
+    chown system system /sys/class/leds/led_b/blink
+
+    chown system system /sys/class/sec/led/led_pattern
+    chown system system /sys/class/sec/led/led_blink
+    chown system system /sys/class/sec/led/led_br_lev
+
+on fs
+    write /sys/block/zram0/comp_algorithm lz4
+    write /proc/sys/vm/page-cluster 0
+    write /proc/sys/vm/swappiness 100
+    swapon_all /vendor/etc/fstab.${ro.hardware}
+
+on late-fs
+    write /sys/block/sda/queue/iostats 0
+    write /sys/block/sda/queue/read_ahead_kb 2048
+    write /sys/block/sda/queue/nr_requests 256
+
+on property:sys.boot_completed=1
+    write /sys/block/sda/queue/iostats 1
+    write /sys/block/sda/queue/read_ahead_kb 256
+    write /sys/block/sda/queue/nr_requests 128
+
+service sec-miscpower-2-0 /system/bin/true
+    oneshot
+    disabled
+
+service argos-daemon /system/bin/true
+    oneshot
+    disabled
+
+service cass /system/bin/true
+    oneshot
+    disabled
+
+service ExynosHWCServiceTW /system/bin/true
+    oneshot
+    disabled
+
+service ExynosHWCConfigs /system/bin/true
+    oneshot
+    disabled
+
+service proca /system/bin/true
+    oneshot
+    disabled
+
+service secure_storage /system/bin/true
+    oneshot
+    disabled
+
+service sec_wsm_service /system/bin/true
+    oneshot
+    disabled
+
+service vaultkeeper /system/bin/true
+    oneshot
+    disabled
+
+service vaultkeeper_hal /system/bin/true
+    oneshot
+    disabled
+
+service icccserv /system/bin/true
+    oneshot
+    disabled
+
+service timaserv /system/bin/true
+    oneshot
+    disabled
+
+service atnserv /system/bin/true
+    oneshot
+    disabled
+
+service ucmtlc-hal-service /system/bin/true
+    oneshot
+    disabled
+
+service snapserv /system/bin/true
+    oneshot
+    disabled
+
+service snap_utility_64 /system/bin/true
+    oneshot
+    disabled
+
+service snap_utility_32 /system/bin/true
+    oneshot
+    disabled
